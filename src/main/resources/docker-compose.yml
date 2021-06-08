@@ -1,0 +1,17 @@
+version: '2'
+services:
+    db:
+        container_name: winestore
+        image: postgres:latest
+        volumes:
+            - winestore:/var/lib/postgresql/data
+        environment:
+            - POSTGRES_PASSWORD=root
+            - POSTGRES_USER=postgres
+            - POSTGRES_DB=winestore
+            - PGDATA=/var/lib/postgresql/data/pgdata
+        ports:
+            - 5432:5432
+
+volumes:
+    winestore: {}
