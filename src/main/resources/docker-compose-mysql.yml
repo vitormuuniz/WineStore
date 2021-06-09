@@ -1,0 +1,15 @@
+version: '2'
+services:
+    mysql:
+        container_name: winestore-mysql
+        image: mysql:5.7
+        volumes:
+            - winestore-mysql:/var/lib/mysql
+        environment:
+            - MYSQL_ROOT_PASSWORD=root
+            - MYSQL_DATABASE=winestore
+        ports:
+            - 8888:8888
+
+volumes:
+    winestore-mysql: {}
