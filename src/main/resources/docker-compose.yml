@@ -1,15 +1,5 @@
 version: '2'
 services:
-    db2:
-        container_name: winestore-mysql
-        image: mysql:5.7
-        volumes:
-            - winestore-mysql:/var/lib/mysql
-        environment:
-            - MYSQL_ROOT_PASSWORD=root
-            - MYSQL_DATABASE=winestore
-        ports:
-            - 8888:8888
     db:
         container_name: winestore-postgresql
         image: postgres:latest
@@ -22,6 +12,16 @@ services:
             - PGDATA=/var/lib/postgresql/data/pgdata
         ports:
             - 5432:5432
+    db2:
+        container_name: winestore-mysql
+        image: mysql:5.7
+        volumes:
+            - winestore-mysql:/var/lib/mysql
+        environment:
+            - MYSQL_ROOT_PASSWORD=root
+            - MYSQL_DATABASE=winestore
+        ports:
+            - 8888:8888
 
 volumes:
     winestore-mysql: {}
