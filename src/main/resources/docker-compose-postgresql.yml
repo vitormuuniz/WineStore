@@ -3,6 +3,7 @@ services:
   postgresql:
     container_name: winestore-postgresql
     image: postgres:latest
+    restart: always
     volumes:
       - winestore-postgresql:/var/lib/postgresql/data
     environment:
