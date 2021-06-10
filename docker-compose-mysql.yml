@@ -10,7 +10,7 @@ services:
         - MYSQL_ROOT_PASSWORD=root
         - MYSQL_DATABASE=winestore
     ports:
-        - 8888:8888
+        - 3306:3306
 
   demo:
     build: "./"
