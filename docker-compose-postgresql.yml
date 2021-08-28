@@ -1,28 +1,19 @@
-version: "2"
+version: '3'
 services:
-  postgresql:
-    container_name: demo-postgresql
-    image: postgres:latest
-    restart: always
-    volumes:
-      - demo-postgresql:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_PASSWORD=root
-      - POSTGRES_USER=postgres
-      - POSTGRES_DB=winestore
-      - PGDATA=/var/lib/postgresql/data/pgdata
+  winestore-postgresql-demo:
+    container_name: api-container-postgresql
+    build: "."
     ports:
-      - 5432:5432
-  demo:
-    build: "./"
-    container_name: demo-api
-    restart: always
-    volumes:
-            - ./:/home/node/app
-    ports:
-            - "8080:8080"
+        - "8081:8081"
     depends_on:
-            - postgresql
-        
-volumes: 
-  demo-postgresql: {}
+        - postgresqldb
+    restart: always
+
+  postgresqldb:
+    container_name: db-container-postgresql
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=winestore
+    restart: always

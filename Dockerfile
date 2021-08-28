@@ -1,6 +1,4 @@
-FROM openjdk:11-jre-slim-sid
-
-WORKDIR /usr/src/app
+FROM openjdk:11
 
 COPY target/demo*.jar demo.jar
 

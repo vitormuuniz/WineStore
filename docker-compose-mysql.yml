@@ -1,27 +1,19 @@
-version: "2"
+version: '3'
 services:
-  mysql:
-    container_name: demo-mysql
-    image: mysql:5.7
+  winestore-mysql-demo:
+    container_name: api-container-mysql
+    build: "."
+    ports:
+        - "8080:8080"
+    depends_on:
+        - mysqldb
     restart: always
-    volumes:
-        - demo-mysql:/var/lib/mysql
+    
+  mysqldb:
+    container_name: db-container-mysql
+    image: mysql:5.7
     environment:
         - MYSQL_ROOT_PASSWORD=root
         - MYSQL_DATABASE=winestore
-    ports:
-        - 3306:3306
-
-  demo:
-    build: "./"
-    container_name: demo-api
     restart: always
-    volumes:
-            - ./:/home/node/app
-    ports:
-            - "8080:8080"
-    depends_on:
-            - mysql
 
-volumes:
-    demo-mysql: {}
