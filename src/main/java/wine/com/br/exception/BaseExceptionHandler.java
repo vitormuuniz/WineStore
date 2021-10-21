@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class BaseExceptionHandler {
 
 	@ExceptionHandler(BaseException.class)
-	protected ResponseEntity<Object> handlerBaseException(BaseException ex) {
+	protected ResponseEntity<Object> handleBaseException(BaseException ex) {
 		return ResponseEntity.status(ex.getHttpStatus()).body(ex.getMessage());
 	}
 }
