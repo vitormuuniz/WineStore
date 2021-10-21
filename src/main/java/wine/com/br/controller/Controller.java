@@ -31,10 +31,10 @@ public class Controller {
 	private Service wineStoreService;
 
 	@PostMapping
-	public ResponseEntity<?> registerRoom(@RequestBody @Valid WineStoreTO form, UriComponentsBuilder uriBuilder)
+	public ResponseEntity<?> registerRoom(@RequestBody @Valid WineStoreTO request, UriComponentsBuilder uriBuilder)
 			throws BaseException {
 
-		WineStoreTO wineStore = wineStoreService.createWineStore(form, uriBuilder);
+		WineStoreTO wineStore = wineStoreService.createWineStore(request);
 
 		URI uri = uriBuilder.path("/wine-stores/{id}").buildAndExpand(wineStore.getId()).toUri();
 

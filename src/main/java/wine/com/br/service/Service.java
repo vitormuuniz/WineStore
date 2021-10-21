@@ -19,21 +19,19 @@ public class Service {
 	@Autowired
 	private Repository wineStoreRepository;
 
-	public WineStoreTO createWineStore(WineStoreTO form, UriComponentsBuilder uriBuilder) throws BaseException {
+	public WineStoreTO createWineStore(WineStoreTO request) throws BaseException {
 		
-		if (form.getFaixaFim() <= form.getFaixaInicio())
-			throw new BaseException("FAIXA_FIM MUST BE GREATER THAN FAIXA_INICIO", HttpStatus.BAD_REQUEST);
-		
-		if (form.getCodigoLoja() == null || form.getFaixaInicio() == null || form.getFaixaFim() == null)
+		if (Utils.atributtesAreNull(request))
 			throw new BaseException("All of the fields must not be null, verify your data", HttpStatus.BAD_REQUEST);
+		
+		if (request.getFaixaFim() <= request.getFaixaInicio())
+			throw new BaseException("FAIXA_FIM must be greater than FAIXA_INICIO", HttpStatus.BAD_REQUEST);
 
-		boolean canCreateWineStore = Utils.canCreateOrUpdateWineStore(form, wineStoreRepository);
-
-		if (!canCreateWineStore) {
+		if (!Utils.canCreateOrUpdateWineStore(request, wineStoreRepository)) {
 			throw new BaseException("There is a zip range conflit, verify your data", HttpStatus.BAD_REQUEST);
 		}
 
-		return wineStoreRepository.save(form);
+		return wineStoreRepository.save(request);
 	}
 
 	public List<WineStoreTO> listAllWineStores(Long faixaInicio, Long faixaFim, String codigoLoja) {
@@ -60,9 +58,9 @@ public class Service {
 		return wineStoreOp.get();
 	}
 
-	public WineStoreTO updateWineStore(WineStoreTO form, Long id) throws BaseException {
+	public WineStoreTO updateWineStore(WineStoreTO request, Long id) throws BaseException {
 		
-		if (form.getFaixaFim() <= form.getFaixaInicio())
+		if (request.getFaixaFim() <= request.getFaixaInicio())
 			throw new BaseException("FAIXA_FIM MUST BE GREATER THAN FAIXA_INICIO", HttpStatus.BAD_REQUEST);
 
 		Optional<WineStoreTO> wineStoreOp = wineStoreRepository.findById(id);
@@ -70,24 +68,22 @@ public class Service {
 		if (!wineStoreOp.isPresent())
 			throw new BaseException("There isn't a wine store with id = " + id, HttpStatus.NOT_FOUND);
 
-		boolean canCreateWineStore = Utils.canCreateOrUpdateWineStore(form, wineStoreRepository);
-
-		if (!canCreateWineStore) {
+		if (!Utils.canCreateOrUpdateWineStore(request, wineStoreRepository)) {
 			throw new BaseException("There is a zip range conflit, verify your data", HttpStatus.BAD_REQUEST);
 		}
 
 		WineStoreTO wineStore = wineStoreOp.get();
 
-		if (form.getCodigoLoja() != null) {
-			wineStore.setCodigoLoja(form.getCodigoLoja());
+		if (request.getCodigoLoja() != null) {
+			wineStore.setCodigoLoja(request.getCodigoLoja());
 		}
 
-		if (form.getFaixaInicio() != null) {
-			wineStore.setFaixaInicio(form.getFaixaInicio());
+		if (request.getFaixaInicio() != null) {
+			wineStore.setFaixaInicio(request.getFaixaInicio());
 		}
 
-		if (form.getFaixaFim() != null) {
-			wineStore.setFaixaFim(form.getFaixaFim());
+		if (request.getFaixaFim() != null) {
+			wineStore.setFaixaFim(request.getFaixaFim());
 		}
 
 		wineStoreRepository.save(wineStore);

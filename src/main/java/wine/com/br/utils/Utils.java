@@ -40,4 +40,8 @@ public class Utils {
 
 		return true;
 	}
+	
+	public static boolean atributtesAreNull(WineStoreTO to) {
+		return to.getCodigoLoja() == null || to.getFaixaInicio() == null || to.getFaixaFim() == null;
+	}
 }
