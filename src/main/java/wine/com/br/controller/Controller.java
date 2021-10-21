@@ -31,7 +31,7 @@ public class Controller {
 	private Service wineStoreService;
 
 	@PostMapping
-	public ResponseEntity<?> registerRoom(@RequestBody @Valid WineStoreTO request, UriComponentsBuilder uriBuilder)
+	public ResponseEntity<WineStoreTO> registerRoom(@RequestBody @Valid WineStoreTO request, UriComponentsBuilder uriBuilder)
 			throws BaseException {
 
 		WineStoreTO wineStore = wineStoreService.createWineStore(request);
@@ -42,7 +42,7 @@ public class Controller {
 	}
 
 	@GetMapping
-	public ResponseEntity<?> listWineRooms(@RequestParam(required = false) Long faixaInicio,
+	public ResponseEntity<List<WineStoreTO>> listWineRooms(@RequestParam(required = false) Long faixaInicio,
 			@RequestParam(required = false) Long faixaFim, @RequestParam(required = false) String codigoLoja) throws BaseException {
 		
 		List<WineStoreTO> wineStoreList = wineStoreService.listAllWineStores(faixaInicio, faixaFim, codigoLoja);
@@ -52,7 +52,7 @@ public class Controller {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<?> listOneWineStoreById(@PathVariable Long id) throws BaseException {
+	public ResponseEntity<WineStoreTO> listOneWineStoreById(@PathVariable Long id) throws BaseException {
 		
 		WineStoreTO wineStore = wineStoreService.findWineStoreById(id);
 
@@ -60,7 +60,7 @@ public class Controller {
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<?> updateWineStore(@RequestBody @Valid WineStoreTO form, @PathVariable Long id) throws BaseException {
+	public ResponseEntity<WineStoreTO> updateWineStore(@RequestBody @Valid WineStoreTO form, @PathVariable Long id) throws BaseException {
 		
 		WineStoreTO wineStore = wineStoreService.updateWineStore(form, id);
 
@@ -69,7 +69,7 @@ public class Controller {
 
 	@DeleteMapping("/{id}")
 	@Transactional
-	public ResponseEntity<?> deleteWineStore(@PathVariable Long id) throws BaseException {
+	public ResponseEntity<Object> deleteWineStore(@PathVariable Long id) throws BaseException {
 		wineStoreService.deleteWineStore(id);
 
 		return ResponseEntity.ok().build();
