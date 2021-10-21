@@ -1,13 +1,13 @@
-package wine.com.br.demo.utils;
+package wine.com.br.utils;
 
 import java.util.List;
 
-import wine.com.br.demo.repository.WineStoreRepository;
-import wine.com.br.demo.to.WineStoreTO;
+import wine.com.br.repository.Repository;
+import wine.com.br.to.WineStoreTO;
 
-public class WineStoreUtils {
+public class Utils {
 
-	public static boolean canCreateOrUpdateWineStore(WineStoreTO wineStoreTO, WineStoreRepository wineStoreRepository) {
+	public static boolean canCreateOrUpdateWineStore(WineStoreTO wineStoreTO, Repository wineStoreRepository) {
 
 		List<WineStoreTO> winStoreList = wineStoreRepository.findAll();
 

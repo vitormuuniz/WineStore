@@ -1,4 +1,4 @@
-package wine.com.br.demo.service;
+package wine.com.br.service;
 
 import java.util.List;
 import java.util.Optional;
@@ -8,20 +8,26 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import wine.com.br.demo.exceptions.BaseException;
-import wine.com.br.demo.repository.WineStoreRepository;
-import wine.com.br.demo.to.WineStoreTO;
-import wine.com.br.demo.utils.WineStoreUtils;
+import wine.com.br.exception.BaseException;
+import wine.com.br.repository.Repository;
+import wine.com.br.to.WineStoreTO;
+import wine.com.br.utils.Utils;
 
 @Service
-public class WineStoreService {
+public class Service {
 
 	@Autowired
-	private WineStoreRepository wineStoreRepository;
+	private Repository wineStoreRepository;
 
 	public WineStoreTO createWineStore(WineStoreTO form, UriComponentsBuilder uriBuilder) throws BaseException {
+		
+		if (form.getFaixaFim() <= form.getFaixaInicio())
+			throw new BaseException("FAIXA_FIM MUST BE GREATER THAN FAIXA_INICIO", HttpStatus.BAD_REQUEST);
+		
+		if (form.getCodigoLoja() == null || form.getFaixaInicio() == null || form.getFaixaFim() == null)
+			throw new BaseException("All of the fields must not be null, verify your data", HttpStatus.BAD_REQUEST);
 
-		boolean canCreateWineStore = WineStoreUtils.canCreateOrUpdateWineStore(form, wineStoreRepository);
+		boolean canCreateWineStore = Utils.canCreateOrUpdateWineStore(form, wineStoreRepository);
 
 		if (!canCreateWineStore) {
 			throw new BaseException("There is a zip range conflit, verify your data", HttpStatus.BAD_REQUEST);
@@ -55,13 +61,16 @@ public class WineStoreService {
 	}
 
 	public WineStoreTO updateWineStore(WineStoreTO form, Long id) throws BaseException {
+		
+		if (form.getFaixaFim() <= form.getFaixaInicio())
+			throw new BaseException("FAIXA_FIM MUST BE GREATER THAN FAIXA_INICIO", HttpStatus.BAD_REQUEST);
 
 		Optional<WineStoreTO> wineStoreOp = wineStoreRepository.findById(id);
 
 		if (!wineStoreOp.isPresent())
 			throw new BaseException("There isn't a wine store with id = " + id, HttpStatus.NOT_FOUND);
 
-		boolean canCreateWineStore = WineStoreUtils.canCreateOrUpdateWineStore(form, wineStoreRepository);
+		boolean canCreateWineStore = Utils.canCreateOrUpdateWineStore(form, wineStoreRepository);
 
 		if (!canCreateWineStore) {
 			throw new BaseException("There is a zip range conflit, verify your data", HttpStatus.BAD_REQUEST);

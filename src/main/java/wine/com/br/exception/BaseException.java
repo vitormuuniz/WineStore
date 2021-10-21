@@ -1,4 +1,4 @@
-package wine.com.br.demo.exceptions;
+package wine.com.br.exception;
 
 import org.springframework.http.HttpStatus;
 

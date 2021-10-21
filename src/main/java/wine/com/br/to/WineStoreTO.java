@@ -1,4 +1,4 @@
-package wine.com.br.demo.to;
+package wine.com.br.to;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
