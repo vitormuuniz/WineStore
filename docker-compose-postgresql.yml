@@ -10,7 +10,7 @@ services:
     restart: always
 
   postgresqldb:
-    container_name: db-container-postgresql
+    container_name: postgresqldb
     image: postgres:latest
     environment:
       - POSTGRES_USER=postgres

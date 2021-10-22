@@ -10,7 +10,7 @@ services:
     restart: always
     
   mysqldb:
-    container_name: db-container-mysql
+    container_name: mysqldb
     image: mysql:5.7
     environment:
         - MYSQL_ROOT_PASSWORD=root
