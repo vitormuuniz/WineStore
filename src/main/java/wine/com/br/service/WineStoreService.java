@@ -6,28 +6,27 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import wine.com.br.exception.BaseException;
-import wine.com.br.repository.Repository;
+import wine.com.br.repository.WineStoreRepository;
 import wine.com.br.to.WineStoreTO;
-import wine.com.br.utils.Utils;
+import wine.com.br.utils.WineStoreUtils;
 
 @Service
-public class Service {
+public class WineStoreService {
 
 	@Autowired
-	private Repository wineStoreRepository;
+	private WineStoreRepository wineStoreRepository;
 
 	public WineStoreTO createWineStore(WineStoreTO request) throws BaseException {
 		
-		if (Utils.atributtesAreNull(request))
+		if (WineStoreUtils.atributtesAreNull(request))
 			throw new BaseException("All of the fields must not be null, verify your data", HttpStatus.BAD_REQUEST);
 		
 		if (request.getFaixaFim() <= request.getFaixaInicio())
 			throw new BaseException("FAIXA_FIM must be greater than FAIXA_INICIO", HttpStatus.BAD_REQUEST);
 
-		if (!Utils.canCreateOrUpdateWineStore(request, wineStoreRepository)) {
+		if (!WineStoreUtils.canCreateOrUpdateWineStore(request, wineStoreRepository)) {
 			throw new BaseException("There is a zip range conflit, verify your data", HttpStatus.BAD_REQUEST);
 		}
 
@@ -68,7 +67,7 @@ public class Service {
 		if (!wineStoreOp.isPresent())
 			throw new BaseException("There isn't a wine store with id = " + id, HttpStatus.NOT_FOUND);
 
-		if (!Utils.canCreateOrUpdateWineStore(request, wineStoreRepository)) {
+		if (!WineStoreUtils.canCreateOrUpdateWineStore(request, wineStoreRepository)) {
 			throw new BaseException("There is a zip range conflit, verify your data", HttpStatus.BAD_REQUEST);
 		}
 

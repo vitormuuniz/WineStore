@@ -20,15 +20,15 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import wine.com.br.exception.BaseException;
-import wine.com.br.service.Service;
+import wine.com.br.service.WineStoreService;
 import wine.com.br.to.WineStoreTO;
 
 @RestController
 @RequestMapping("/wine-stores")
-public class Controller {
+public class WineStoreController {
 
 	@Autowired
-	private Service wineStoreService;
+	private WineStoreService wineStoreService;
 
 	@PostMapping
 	public ResponseEntity<WineStoreTO> registerRoom(@RequestBody @Valid WineStoreTO request, UriComponentsBuilder uriBuilder)
