@@ -1,6 +1,5 @@
 package wine.com.br.controller;
 
-import java.net.URI;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import wine.com.br.exception.BaseException;
 import wine.com.br.service.WineStoreService;
@@ -36,9 +34,7 @@ public class WineStoreController {
 
 		WineStoreTO wineStore = wineStoreService.createWineStore(request);
 
-		URI uri = uriBuilder.path("/wine-stores/{id}").buildAndExpand(wineStore.getId()).toUri();
-
-		return ResponseEntity.created(uri).body(wineStore);
+        	return ResponseEntity.status(HttpStatus.CREATED).body(wineStore)
 	}
 
 	@GetMapping
