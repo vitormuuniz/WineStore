@@ -1,7 +1,13 @@
 package wine.com.br.to;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.lang.Nullable;
 
+@Getter
+@Setter
+@NoArgsConstructor
 public class WineStoreUpdateForm {
 	
 	@Nullable
@@ -10,32 +16,4 @@ public class WineStoreUpdateForm {
 	private Long faixaInicio;
 	@Nullable
 	private Long faixaFim;
-	
-	public WineStoreUpdateForm() {
-		
-	}
-
-	public String getCodigoLoja() {
-		return codigoLoja;
-	}
-
-	public void setCodigoLoja(String codigoLoja) {
-		this.codigoLoja = codigoLoja;
-	}
-
-	public Long getFaixaInicio() {
-		return faixaInicio;
-	}
-
-	public void setFaixaInicio(Long faixaInicio) {
-		this.faixaInicio = faixaInicio;
-	}
-
-	public Long getFaixaFim() {
-		return faixaFim;
-	}
-
-	public void setFaixaFim(Long faixaFim) {
-		this.faixaFim = faixaFim;
-	}
 }
