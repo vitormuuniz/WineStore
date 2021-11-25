@@ -28,7 +28,7 @@ public class WineStoreController {
 	public ResponseEntity<List<WineStoreTO>> listWineRooms(
 			@RequestParam(required = false) Long faixaInicio,
 			@RequestParam(required = false) Long faixaFim,
-			@RequestParam(required = false) String codigoLoja) throws BaseException {
+			@RequestParam(required = false) String codigoLoja) {
 		List<WineStoreTO> wineStoreList = wineStoreService.listAllWineStores(faixaInicio, faixaFim, codigoLoja);
 		return ResponseEntity.ok(wineStoreList);
 	}
