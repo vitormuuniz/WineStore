@@ -17,3 +17,5 @@ services:
       - POSTGRES_PASSWORD=root
       - POSTGRES_DB=winestore
     restart: always
+    ports:
+      - "3306:3306"
