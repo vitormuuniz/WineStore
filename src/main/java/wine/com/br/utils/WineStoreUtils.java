@@ -10,6 +10,8 @@ import wine.com.br.to.WineStoreTO;
 
 public class WineStoreUtils {
 
+	private WineStoreUtils() {}
+
 	public static boolean canCreateOrUpdateWineStore(WineStoreTO wineStoreRequest,
 													 WineStoreRepository wineStoreRepository,
 													 boolean isUpdate) throws BaseException {
