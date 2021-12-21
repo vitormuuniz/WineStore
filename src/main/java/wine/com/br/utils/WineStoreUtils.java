@@ -22,7 +22,7 @@ public class WineStoreUtils {
 			);
 			List<WineStoreTO> winStoreList = wineStoreRepository
 					.findWineStoresFiltered(wineStoreRequest.getFaixaInicio(), wineStoreRequest.getFaixaFim());
-			if (winStoreList.isEmpty())
+			if (wineStoreRepository.count() > 0 && winStoreList.isEmpty())
 				throw new BaseException("There is a zip range conflict, verify your data", HttpStatus.BAD_REQUEST);
 		} else if (!isUpdate) throw new BaseException(
 				"faixaFim and faixaInicio must be greater than zero and must be not null",
