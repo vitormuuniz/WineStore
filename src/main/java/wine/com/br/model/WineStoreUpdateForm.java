@@ -1,4 +1,4 @@
-package wine.com.br.to;
+package wine.com.br.model;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
