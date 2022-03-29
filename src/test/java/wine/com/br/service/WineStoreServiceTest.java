@@ -104,7 +104,7 @@ class WineStoreServiceTest {
     void testListAllWineStoresByCodigoLoja() {
         when(repository.findByCodigoLoja(anyString())).thenReturn(List.of(to));
         service
-                .listAllWineStores(null, null, to.getCodigoLoja())
+                .listWineStores(null, null, to.getCodigoLoja())
                 .stream()
                 .findFirst()
                 .ifPresent(this::validateWineStore);
@@ -116,7 +116,7 @@ class WineStoreServiceTest {
         WineStore wineStore1 = buildWineStore();
         wineStore1.setFaixaInicio(1000L);
         when(repository.findAll()).thenReturn(List.of(to, wineStore1));
-        List<WineStore> response = service.listAllWineStores(null, null, null);
+        List<WineStore> response = service.listWineStores(null, null, null);
         assertEquals(2, response.size());
         verify(repository, times(1)).findAll();
     }
@@ -128,7 +128,7 @@ class WineStoreServiceTest {
         WineStore wineStore2 = buildWineStore();
         wineStore2.setFaixaInicio(20000L);
         when(repository.findByFaixaInicioGreaterThan(anyLong())).thenReturn(List.of(to));
-        service.listAllWineStores(14000L, 19000L, null)
+        service.listWineStores(14000L, 19000L, null)
                 .stream()
                 .findFirst()
                 .ifPresent(this::validateWineStore);
@@ -143,7 +143,7 @@ class WineStoreServiceTest {
         WineStore wineStore2 = buildWineStore();
         wineStore2.setFaixaInicio(20000L);
         when(repository.findByFaixaInicioGreaterThan(anyLong())).thenReturn(List.of(to, wineStore2));
-        List<WineStore> response = service.listAllWineStores(13000L, null, null);
+        List<WineStore> response = service.listWineStores(13000L, null, null);
         assertEquals(2, response.size());
         verify(repository, times(1))
                 .findByFaixaInicioGreaterThan(13000L);
@@ -156,7 +156,7 @@ class WineStoreServiceTest {
         WineStore wineStore2 = buildWineStore();
         wineStore2.setFaixaInicio(20000L);
         when(repository.findByFaixaFimLessThan(anyLong())).thenReturn(List.of(to, wineStore1, wineStore2));
-        List<WineStore> response = service.listAllWineStores(null, 20000L, null);
+        List<WineStore> response = service.listWineStores(null, 20000L, null);
         assertEquals(3, response.size());
         verify(repository, times(1))
                 .findByFaixaFimLessThan(20000L);

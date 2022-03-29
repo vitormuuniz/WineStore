@@ -31,7 +31,7 @@ public class WineStoreService {
 		return wineStoreRepository.save(request);
 	}
 
-	public List<WineStore> listAllWineStores(Long faixaInicio, Long faixaFim, String codigoLoja) {
+	public List<WineStore> listWineStores(Long faixaInicio, Long faixaFim, String codigoLoja) {
 		if (codigoLoja != null) {
 			return wineStoreRepository.findByCodigoLoja(codigoLoja);
 		}
