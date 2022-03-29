@@ -23,103 +23,102 @@ import org.springframework.http.HttpStatus;
 import wine.com.br.exception.BaseException;
 import wine.com.br.model.WineStore;
 import wine.com.br.repository.WineStoreRepository;
-import wine.com.br.service.WineStoreService;
 
 @SpringBootTest(classes = WineStoreService.class)
 class WineStoreServiceTest {
 
     @Autowired
-    private WineStoreService wineStoreService;
+    private WineStoreService service;
 
     @MockBean
-    private WineStoreRepository wineStoreRepository;
+    private WineStoreRepository repository;
 
-    private WineStore wineStore;
+    private WineStore to;
 
     @BeforeEach
     void init() {
-        wineStore = buildWineStore();
+        to = buildWineStore();
     }
 
     @Test
     void testCreateWineStore() throws BaseException {
-        when(wineStoreRepository.findWineStoresFiltered(anyLong(), anyLong())).thenReturn(new ArrayList<>());
-        when(wineStoreRepository.save(any())).thenReturn(wineStore);
-        WineStore response = wineStoreService.createWineStore(wineStore);
+        when(repository.findWineStoresFiltered(anyLong(), anyLong())).thenReturn(new ArrayList<>());
+        when(repository.save(any())).thenReturn(to);
+        WineStore response = service.createWineStore(to);
         validateWineStore(response);
     }
 
     @Test
     void testCreateWineStoreWithCodigoLojaNullShouldThrowBaseException() {
-        wineStore.setCodigoLoja(null);
-        BaseException ex = assertThrows(BaseException.class, () -> wineStoreService.createWineStore(wineStore),
+        to.setCodigoLoja(null);
+        BaseException ex = assertThrows(BaseException.class, () -> service.createWineStore(to),
                 "It was expected that createWineStore() thrown an exception, " +
                         "due to codigoLoja null");
         assertEquals(HttpStatus.BAD_REQUEST, ex.getHttpStatus());
-        verify(wineStoreRepository, times(0)).save(wineStore);
+        verify(repository, times(0)).save(to);
     }
 
     @Test
     void testCreateWineStoreWithFaixaInicioNullShouldThrowBaseException() {
-        wineStore.setFaixaInicio(null);
-        BaseException ex = assertThrows(BaseException.class, () -> wineStoreService.createWineStore(wineStore),
+        to.setFaixaInicio(null);
+        BaseException ex = assertThrows(BaseException.class, () -> service.createWineStore(to),
                 "It was expected that createWineStore() thrown an exception, " +
                         "due to faixaInicio null");
         assertEquals(HttpStatus.BAD_REQUEST, ex.getHttpStatus());
-        verify(wineStoreRepository, times(0)).save(wineStore);
+        verify(repository, times(0)).save(to);
     }
 
     @Test
     void testCreateWineStoreWithFaixaFimNullShouldThrowBaseException() {
-        wineStore.setFaixaFim(null);
-        BaseException ex = assertThrows(BaseException.class, () -> wineStoreService.createWineStore(wineStore),
+        to.setFaixaFim(null);
+        BaseException ex = assertThrows(BaseException.class, () -> service.createWineStore(to),
                 "It was expected that createWineStore() thrown an exception, " +
                         "due to faixaFim null");
         assertEquals(HttpStatus.BAD_REQUEST, ex.getHttpStatus());
-        verify(wineStoreRepository, times(0)).save(wineStore);
+        verify(repository, times(0)).save(to);
     }
 
     @Test
     void testCreateWineStoreWithFaixaInicioLessThanFaixaFimShouldThrowBaseException() {
-        wineStore.setFaixaInicio(15000L);
-        wineStore.setFaixaFim(14000L);
-        BaseException ex = assertThrows(BaseException.class, () -> wineStoreService.createWineStore(wineStore),
+        to.setFaixaInicio(15000L);
+        to.setFaixaFim(14000L);
+        BaseException ex = assertThrows(BaseException.class, () -> service.createWineStore(to),
                 "It was expected that createWineStore() thrown an exception, " +
                         "due to faixaInicio less than faixaFim");
         assertEquals(HttpStatus.BAD_REQUEST, ex.getHttpStatus());
-        verify(wineStoreRepository, times(0)).save(wineStore);
+        verify(repository, times(0)).save(to);
     }
 
     @Test
     void testCreateWineStoreWithZipRangeConflictShouldThrowBaseException() {
-        when(wineStoreRepository.findWineStoresFiltered(anyLong(), anyLong())).thenReturn(List.of(new WineStore()));
-        when(wineStoreRepository.count()).thenReturn(1L);
-        BaseException ex = assertThrows(BaseException.class, () -> wineStoreService.createWineStore(wineStore),
+        when(repository.findWineStoresFiltered(anyLong(), anyLong())).thenReturn(List.of(new WineStore()));
+        when(repository.count()).thenReturn(1L);
+        BaseException ex = assertThrows(BaseException.class, () -> service.createWineStore(to),
                 "It was expected that createWineStore() thrown an exception, " +
                         "due to zip range conflict");
         assertEquals(HttpStatus.BAD_REQUEST, ex.getHttpStatus());
-        verify(wineStoreRepository, times(0)).save(wineStore);
+        verify(repository, times(0)).save(to);
     }
 
     @Test
     void testListAllWineStoresByCodigoLoja() {
-        when(wineStoreRepository.findByCodigoLoja(anyString())).thenReturn(List.of(wineStore));
-        wineStoreService
-                .listAllWineStores(null, null, wineStore.getCodigoLoja())
+        when(repository.findByCodigoLoja(anyString())).thenReturn(List.of(to));
+        service
+                .listAllWineStores(null, null, to.getCodigoLoja())
                 .stream()
                 .findFirst()
                 .ifPresent(this::validateWineStore);
-        verify(wineStoreRepository, times(1)).findByCodigoLoja(wineStore.getCodigoLoja());
+        verify(repository, times(1)).findByCodigoLoja(to.getCodigoLoja());
     }
 
     @Test
     void testListAllWineStores() {
         WineStore wineStore1 = buildWineStore();
         wineStore1.setFaixaInicio(1000L);
-        when(wineStoreRepository.findAll()).thenReturn(List.of(wineStore, wineStore1));
-        List<WineStore> response = wineStoreService.listAllWineStores(null, null, null);
+        when(repository.findAll()).thenReturn(List.of(to, wineStore1));
+        List<WineStore> response = service.listAllWineStores(null, null, null);
         assertEquals(2, response.size());
-        verify(wineStoreRepository, times(1)).findAll();
+        verify(repository, times(1)).findAll();
     }
 
     @Test
@@ -128,12 +127,12 @@ class WineStoreServiceTest {
         wineStore1.setFaixaInicio(1000L);
         WineStore wineStore2 = buildWineStore();
         wineStore2.setFaixaInicio(20000L);
-        when(wineStoreRepository.findByFaixaInicioGreaterThan(anyLong())).thenReturn(List.of(wineStore));
-        wineStoreService.listAllWineStores(14000L, 19000L, null)
+        when(repository.findByFaixaInicioGreaterThan(anyLong())).thenReturn(List.of(to));
+        service.listAllWineStores(14000L, 19000L, null)
                 .stream()
                 .findFirst()
                 .ifPresent(this::validateWineStore);
-        verify(wineStoreRepository, times(1))
+        verify(repository, times(1))
                 .findBetweenFaixaInicioAndFaixaFim(14000L, 19000L);
     }
 
@@ -143,10 +142,10 @@ class WineStoreServiceTest {
         wineStore1.setFaixaInicio(1000L);
         WineStore wineStore2 = buildWineStore();
         wineStore2.setFaixaInicio(20000L);
-        when(wineStoreRepository.findByFaixaInicioGreaterThan(anyLong())).thenReturn(List.of(wineStore, wineStore2));
-        List<WineStore> response = wineStoreService.listAllWineStores(13000L, null, null);
+        when(repository.findByFaixaInicioGreaterThan(anyLong())).thenReturn(List.of(to, wineStore2));
+        List<WineStore> response = service.listAllWineStores(13000L, null, null);
         assertEquals(2, response.size());
-        verify(wineStoreRepository, times(1))
+        verify(repository, times(1))
                 .findByFaixaInicioGreaterThan(13000L);
     }
 
@@ -156,24 +155,24 @@ class WineStoreServiceTest {
         wineStore1.setFaixaInicio(1000L);
         WineStore wineStore2 = buildWineStore();
         wineStore2.setFaixaInicio(20000L);
-        when(wineStoreRepository.findByFaixaFimLessThan(anyLong())).thenReturn(List.of(wineStore, wineStore1, wineStore2));
-        List<WineStore> response = wineStoreService.listAllWineStores(null, 20000L, null);
+        when(repository.findByFaixaFimLessThan(anyLong())).thenReturn(List.of(to, wineStore1, wineStore2));
+        List<WineStore> response = service.listAllWineStores(null, 20000L, null);
         assertEquals(3, response.size());
-        verify(wineStoreRepository, times(1))
+        verify(repository, times(1))
                 .findByFaixaFimLessThan(20000L);
     }
 
     @Test
     void testFindById() throws BaseException {
-        when(wineStoreRepository.findById(anyLong())).thenReturn(Optional.of(wineStore));
-        WineStore response = wineStoreService.findWineStoreById(wineStore.getId());
+        when(repository.findById(anyLong())).thenReturn(Optional.of(to));
+        WineStore response = service.findWineStoreById(to.getId());
         validateWineStore(response);
     }
 
     @Test
     void testFindByIdShouldThrowException() {
-        when(wineStoreRepository.findById(anyLong())).thenThrow(new BaseException("any exception message", HttpStatus.NOT_FOUND));
-        BaseException ex = assertThrows(BaseException.class, () -> wineStoreService.findWineStoreById(wineStore.getId()),
+        when(repository.findById(anyLong())).thenThrow(new BaseException("any exception message", HttpStatus.NOT_FOUND));
+        BaseException ex = assertThrows(BaseException.class, () -> service.findWineStoreById(to.getId()),
                 "It was expected that findWineStoreById() thrown an exception, " +
                         "due to wine store not found");
         assertEquals(HttpStatus.NOT_FOUND, ex.getHttpStatus());
@@ -181,78 +180,78 @@ class WineStoreServiceTest {
 
     @Test
     void testUpdateWineStoreCodigoLoja() {
-        when(wineStoreRepository.findById(anyLong())).thenReturn(Optional.of(wineStore));
-        wineStore.setCodigoLoja("999");
-        when(wineStoreRepository.save(any())).thenReturn(wineStore);
+        when(repository.findById(anyLong())).thenReturn(Optional.of(to));
+        to.setCodigoLoja("999");
+        when(repository.save(any())).thenReturn(to);
         WineStore wineStoreToBeUpdated = new WineStore();
         wineStoreToBeUpdated.setCodigoLoja("999");
-        WineStore response = wineStoreService.updateWineStore(wineStoreToBeUpdated, 123L);
+        WineStore response = service.updateWineStore(wineStoreToBeUpdated, 123L);
         assertEquals(wineStoreToBeUpdated.getCodigoLoja(), response.getCodigoLoja());
     }
 
     @Test
     void testUpdateWineStoreFaixaInicio() {
-        when(wineStoreRepository.findById(anyLong())).thenReturn(Optional.of(wineStore));
-        wineStore.setFaixaInicio(15000L);
-        when(wineStoreRepository.save(any())).thenReturn(wineStore);
+        when(repository.findById(anyLong())).thenReturn(Optional.of(to));
+        to.setFaixaInicio(15000L);
+        when(repository.save(any())).thenReturn(to);
         WineStore wineStoreToBeUpdated = new WineStore();
         wineStoreToBeUpdated.setFaixaInicio(15000L);
-        WineStore response = wineStoreService.updateWineStore(wineStoreToBeUpdated, 123L);
+        WineStore response = service.updateWineStore(wineStoreToBeUpdated, 123L);
         assertEquals(wineStoreToBeUpdated.getFaixaInicio(), response.getFaixaInicio());
     }
 
     @Test
     void testUpdateWineStoreFaixaFim() {
-        when(wineStoreRepository.findById(anyLong())).thenReturn(Optional.of(wineStore));
-        wineStore.setFaixaFim(16000L);
-        when(wineStoreRepository.save(any())).thenReturn(wineStore);
+        when(repository.findById(anyLong())).thenReturn(Optional.of(to));
+        to.setFaixaFim(16000L);
+        when(repository.save(any())).thenReturn(to);
         WineStore wineStoreToBeUpdated = new WineStore();
         wineStoreToBeUpdated.setFaixaFim(16000L);
-        WineStore response = wineStoreService.updateWineStore(wineStoreToBeUpdated, 123L);
+        WineStore response = service.updateWineStore(wineStoreToBeUpdated, 123L);
         assertEquals(wineStoreToBeUpdated.getFaixaFim(), response.getFaixaFim());
     }
 
     @Test
     void testUpdateWineStoreShouldThrowException() {
-        when(wineStoreRepository.findById(anyLong())).thenThrow(new BaseException("any exception message", HttpStatus.NOT_FOUND));
+        when(repository.findById(anyLong())).thenThrow(new BaseException("any exception message", HttpStatus.NOT_FOUND));
         WineStore wineStoreToBeUpdated = new WineStore();
         wineStoreToBeUpdated.setFaixaFim(16000L);
-        BaseException ex = assertThrows(BaseException.class, () -> wineStoreService.updateWineStore(wineStoreToBeUpdated, 123L),
+        BaseException ex = assertThrows(BaseException.class, () -> service.updateWineStore(wineStoreToBeUpdated, 123L),
                 "It was expected that updateWineStore() thrown an exception, " +
                         "due to wine store not found");
         assertEquals(HttpStatus.NOT_FOUND, ex.getHttpStatus());
-        verify(wineStoreRepository, times(0)).save(wineStore);
+        verify(repository, times(0)).save(to);
     }
 
     @Test
     void testDeleteWineStore() throws BaseException {
-        when(wineStoreRepository.findById(anyLong())).thenReturn(Optional.of(wineStore));
-        wineStoreService.deleteWineStore(wineStore.getId());
-        verify(wineStoreRepository, times(1)).deleteById(wineStore.getId());
+        when(repository.findById(anyLong())).thenReturn(Optional.of(to));
+        service.deleteWineStore(to.getId());
+        verify(repository, times(1)).deleteById(to.getId());
     }
 
     @Test
     void testDeleteWineStoreShouldThrowException() {
-        when(wineStoreRepository.findById(anyLong())).thenThrow(new BaseException("any exception message", HttpStatus.NOT_FOUND));
-        BaseException ex = assertThrows(BaseException.class, () -> wineStoreService.deleteWineStore(123L),
+        when(repository.findById(anyLong())).thenThrow(new BaseException("any exception message", HttpStatus.NOT_FOUND));
+        BaseException ex = assertThrows(BaseException.class, () -> service.deleteWineStore(123L),
                 "It was expected that deleteWineStore() thrown an exception, " +
                         "due to wine store not found");
         assertEquals(HttpStatus.NOT_FOUND, ex.getHttpStatus());
-        verify(wineStoreRepository, times(0)).deleteById(wineStore.getId());
+        verify(repository, times(0)).deleteById(to.getId());
     }
 
     private WineStore buildWineStore() {
-        wineStore = new WineStore();
-        wineStore.setId(123L);
-        wineStore.setCodigoLoja("12345");
-        wineStore.setFaixaInicio(13000L);
-        wineStore.setFaixaFim(14000L);
-        return wineStore;
+        to = new WineStore();
+        to.setId(123L);
+        to.setCodigoLoja("12345");
+        to.setFaixaInicio(13000L);
+        to.setFaixaFim(14000L);
+        return to;
     }
 
     private void validateWineStore(WineStore response) {
-        assertEquals(wineStore.getCodigoLoja(), response.getCodigoLoja());
-        assertEquals(wineStore.getFaixaInicio(), response.getFaixaInicio());
-        assertEquals(wineStore.getFaixaFim(), response.getFaixaFim());
+        assertEquals(to.getCodigoLoja(), response.getCodigoLoja());
+        assertEquals(to.getFaixaInicio(), response.getFaixaInicio());
+        assertEquals(to.getFaixaFim(), response.getFaixaFim());
     }
 }
