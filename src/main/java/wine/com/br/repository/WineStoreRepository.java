@@ -15,9 +15,9 @@ public interface WineStoreRepository extends JpaRepository<WineStore, Long>{
 	List<WineStore> findByCodigoLoja(String codigoLoja);
 	@Query(value = "" +
 			"SELECT * FROM WINE_STORE WHERE " +
-			"(?1 NOT BETWEEN faixa_inicio AND faixa_fim) AND" +
-			"(?2 NOT BETWEEN faixa_inicio AND faixa_fim) AND" +
-			" NOT(?1 >= faixa_inicio AND ?2 <= faixa_fim) AND" +
-			" NOT(?1 <= faixa_inicio AND ?2 >= faixa_fim)", nativeQuery = true)
+			"(?1 BETWEEN faixa_inicio AND faixa_fim) OR" +
+			"(?2 BETWEEN faixa_inicio AND faixa_fim) OR" +
+			"(?1 >= faixa_inicio AND ?2 <= faixa_fim) OR" +
+			"(?1 <= faixa_inicio AND ?2 >= faixa_fim)", nativeQuery = true)
 	List<WineStore> findWineStoresFiltered(Long faixaInicio, Long faixaFim);
 }

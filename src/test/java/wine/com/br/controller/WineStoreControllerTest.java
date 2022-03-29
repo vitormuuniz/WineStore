@@ -33,7 +33,7 @@ import wine.com.br.repository.WineStoreRepository;
 class WineStoreControllerTest {
 
     @Autowired
-    WineStoreRepository wineStoreRepository;
+    private WineStoreRepository wineStoreRepository;
 
     @Autowired
     private MockMvc mockMvc;
